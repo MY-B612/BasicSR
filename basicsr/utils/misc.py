@@ -1,6 +1,8 @@
 import numpy as np
 import os
 import random
+import fnmatch
+import re
 import time
 import torch
 from os import path as osp
@@ -21,14 +23,23 @@ def get_time_str():
     return time.strftime('%Y%m%d_%H%M%S', time.localtime())
 
 
-def mkdir_and_rename(path):
+def mkdir_and_rename(path, use_log_timestamp=True, log_file_ext='*.log'):
     """mkdirs. If path exists, rename it with timestamp and create a new one.
 
     Args:
         path (str): Folder path.
+        use_log_timestamp(boolean): Whether to use log file's timestamp
+        log_file_ext (str): log file's extension (used to locate log file)
     """
     if osp.exists(path):
-        new_name = path + '_archived_' + get_time_str()
+        timestamp = get_time_str() # current timestamp
+        if use_log_timestamp:
+            log_file = sorted([f for f in os.listdir(path) if fnmatch.fnmatch(f, log_file_ext)])
+            if log_file:
+                match_str = re.search(r'\d{8}_\d{6}', log_file[-1])
+                if match_str:
+                    timestamp = match_str.group()
+        new_name = path + '_archived_' + timestamp
         print(f'Path already exists. Rename it to {new_name}', flush=True)
         os.rename(path, new_name)
     os.makedirs(path, exist_ok=True)
