@@ -22,7 +22,8 @@ def init_tb_loggers(opt):
         init_wandb_logger(opt)
     tb_logger = None
     if opt['logger'].get('use_tb_logger') and 'debug' not in opt['name']:
-        tb_logger = init_tb_logger(log_dir=osp.join(opt['root_path'], 'tb_logger', opt['name']))
+        # tb_logger = init_tb_logger(log_dir=osp.join(opt['root_path'], 'tb_logger', opt['name']))
+        tb_logger = init_tb_logger(log_dir=opt['path']['experiments_root'])
     return tb_logger
 
 
@@ -101,8 +102,8 @@ def train_pipeline(root_path):
     # mkdir for experiments and logger
     if resume_state is None:
         make_exp_dirs(opt)
-        if opt['logger'].get('use_tb_logger') and 'debug' not in opt['name'] and opt['rank'] == 0:
-            mkdir_and_rename(osp.join(opt['root_path'], 'tb_logger', opt['name']))
+#        if opt['logger'].get('use_tb_logger') and 'debug' not in opt['name'] and opt['rank'] == 0:
+#            mkdir_and_rename(osp.join(opt['root_path'], 'tb_logger', opt['name']))
 
     # copy the yml file to the experiment root
     copy_opt_file(args.opt, opt['path']['experiments_root'])
