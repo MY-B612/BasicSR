@@ -36,7 +36,7 @@ def mkdir_and_rename(path, use_log_timestamp=True, log_file_ext='*.log'):
         if use_log_timestamp:
             log_file = sorted([f for f in os.listdir(path) if fnmatch.fnmatch(f, log_file_ext)])
             if log_file:
-                match_str = re.search(r'\d{8}_\d{6}', log_file[-1])
+                match_str = re.search(r'\d{8}_\d{6}', log_file[0])
                 if match_str:
                     timestamp = match_str.group()
         new_name = path + '_archived_' + timestamp
